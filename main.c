@@ -25,12 +25,37 @@ struct img img_default()
     return img;
 }
 
+#define DIST "."
+#define NAME "/igen_image.png"
+
 int main(int argc, char **argv)
 {
-    char *path = "./igen_image.png";
+    char *path;
     if (argc == 2)
     {
-        strcpy(path, argv[1]);
+        if ((path = malloc(strlen(NAME) + strlen(argv[1]) + 1)) != NULL)
+        {
+            path[0] = '\0';
+            strcat(path, argv[1]);
+            strcat(path, NAME);
+        }
+        else
+        {
+            fprintf(stderr, "malloc failed!\n");
+        }
+    }
+    else
+    {
+        if ((path = malloc(strlen(NAME) + strlen(DIST) + 1)) != NULL)
+        {
+            path[0] = '\0';
+            strcat(path, DIST);
+            strcat(path, NAME);
+        }
+        else
+        {
+            fprintf(stderr, "malloc failed!\n");
+        }
     }
 
     srand((unsigned int)time(NULL));
@@ -72,7 +97,8 @@ int main(int argc, char **argv)
         }
     }
 
-    stbi_write_png(path, img.width, img.height, img.channels, img.pixels, img.width * img.channels);
+    int res = stbi_write_png(path, img.width, img.height, img.channels, img.pixels, img.width * img.channels);
+    printf("Image save result: %d\n", res);
 
     free(img.pixels);
 

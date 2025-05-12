@@ -1,3 +1,6 @@
+PREFIX = /usr/local
+
+
 CC = gcc
 LIBS = 
 INCLUDES = 
@@ -13,12 +16,17 @@ TARGET = igen
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+install: all
+	mkdir -p ${DESTDIR}${PREFIX}/bin
+	cp -f ${TARGET} ${DESTDIR}${PREFIX}/bin
+	chmod 755 ${DESTDIR}${PREFIX}/bin/${TARGET}
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) *.png
 
 .PHONY: all clean
